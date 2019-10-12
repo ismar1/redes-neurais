@@ -27,28 +27,37 @@ taxaAprendizagem = 0.5
 momento = 1
 
 for j in range(epocas):
+  # Somatório das entradas com os pesos
   camadaEntrada = entradas
   somaSinapse0 = np.dot(camadaEntrada, pesos0)
+  # Sigmoid da camada oculta
   camadaOculta = sigmoid(somaSinapse0)
-    
+  
+  # Somatório da camada oculta com os pesos
   somaSinapse1 = np.dot(camadaOculta, pesos1)
+  # Sigmoid da camada saída
   camadaSaida = sigmoid(somaSinapse1)
   
+  # Erro
   erroCamadaSaida = saidas - camadaSaida
   mediaAbsoluta = np.mean(np.abs(erroCamadaSaida))
   print("Erro: " + str(mediaAbsoluta))
   
+  # Derivada e delta saída
   derivadaSaida = sigmoidDerivada(camadaSaida)
   deltaSaida = erroCamadaSaida * derivadaSaida
   
+  # Delta da camada oculta
   pesos1Transposta = pesos1.T
   deltaSaidaXPeso = deltaSaida.dot(pesos1Transposta)
   deltaCamadaOculta = deltaSaidaXPeso * sigmoidDerivada(camadaOculta)
   
+  # Atualização dos pesos da saída para camada oculta
   camadaOcultaTransposta = camadaOculta.T
   pesosNovo1 = camadaOcultaTransposta.dot(deltaSaida)
   pesos1 = (pesos1 * momento) + (pesosNovo1 * taxaAprendizagem)
   
+  # Atualização dos pesos da camada oculta para as entradas
   camadaEntradaTransposta = camadaEntrada.T
   pesosNovo0 = camadaEntradaTransposta.dot(deltaCamadaOculta)
   pesos0 = (pesos0 * momento) + (pesosNovo0 * taxaAprendizagem)
@@ -60,7 +69,7 @@ for s in range(len(camadaSaida)):
   else:
     camadaSaida[s] = 1.0
 
-print('Chance de acerto: {0:.1f}%'.format((1 - mediaAbsoluta) * 100))
+print('\nChance de acerto: {0:.1f}%'.format((1 - mediaAbsoluta) * 100))
   
   
   
